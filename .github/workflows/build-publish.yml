@@ -49,3 +49,10 @@ jobs:
           echo RUNNUMBER=${GITHUB_RUN_ID}
           docker tag ${IMAGE_NAME} ${IMAGE_ID}:${VERSION}
           docker push ${IMAGE_ID}:${VERSION}
+
+      - name: Create semantic-release, if not scheduled event
+        if: github.event.name == 'push' && github.event.name != 'schedule'
+        # later add && github.ref == 'refs/heads/master' to only create master releases. for testing without.
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
