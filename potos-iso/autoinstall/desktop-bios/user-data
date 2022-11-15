@@ -48,7 +48,7 @@ autoinstall:
         number: 3
       - id: dm-crypt_0
         volume: partition_crypt
-        key: installpotos
+        key: install
         preserve: false
         type: dm_crypt
       - id: lvm_volgroup_0
@@ -108,11 +108,11 @@ autoinstall:
             ;;
         esac
       done
-    #- sed -ie 's|GRUB_CMDLINE_LINUX_DEFAULT=.*|GRUB_CMDLINE_LINUX_DEFAULT="nomodeset quiet splash gnome.initial-setup=1 systemd.debug_shell"|' /target/etc/default/grub
-    #- cp /cdrom/contrib/sudoers.d/01_gnome-initial-setup /target/etc/sudoers.d/01_gnome-initial-setup
-    #- cp -r /cdrom/contrib/scripts /target/setup
-    #- curtin in-target --target=/target -- ln -sf /setup/firstboot-gui.sh /usr/libexec/gnome-initial-setup
-    #- curtin in-target --target=/target -- update-grub
+    - sed -ie 's|GRUB_CMDLINE_LINUX_DEFAULT=.*|GRUB_CMDLINE_LINUX_DEFAULT="quiet splash gnome.initial-setup=1 systemd.debug_shell"|' /target/etc/default/grub
+    - cp /cdrom/contrib/sudoers.d/01_gnome-initial-setup /target/etc/sudoers.d/01_gnome-initial-setup
+    - cp -r /cdrom/contrib/scripts /target/setup
+    - curtin in-target --target=/target -- ln -sf /setup/firstboot-gui.sh /usr/libexec/gnome-initial-setup
+    - curtin in-target --target=/target -- update-grub
     - mkdir /target/potos
     - touch /target/potos/example.empty
 

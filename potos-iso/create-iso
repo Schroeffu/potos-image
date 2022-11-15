@@ -110,25 +110,26 @@ EOF
 }
 
 main() {
-  if [[ -z "${1}" ]]; then
-    usage
+  if [[ -z "${POTOS_ENV}" ]]; then
+    echo "Please provide $POTOS_ENV develop or production"
     exit 1
   fi
 
-  ENVIRONMENT=production
+  ENVIRONMENT=${POTOS_ENV}
 
-  while getopts dpt: opt; do
-    case "$opt" in
-      d) ENVIRONMENT=develop
-        ;;
-      p) ENVIRONMENT=production
-        ;;
-      *)
-        usage
-        ;;
-    esac
-  done
+#  while getopts dpt: opt; do
+#    case "$opt" in
+#      d) ENVIRONMENT=develop
+#        ;;
+#      p) ENVIRONMENT=production
+#        ;;
+#      *)
+#        usage
+#        ;;
+#    esac
+#   done
 
+  echo "*** DEBUG: Got POTOS_SPECS_REPOSITORY = ${POTOS_SPECS_REPOSITORY}, POTOS_ADJOIN = ${POTOS_ADJOIN}, POTOS_ENV = ${POTOS_ENV}"
   echo "*** Going build an ISO of type: ${INSTALL_TYPE} for ${ENVIRONMENT}"
 
   check_requirements

@@ -2,10 +2,14 @@
 version: "3.2"
 services:
   potos-iso-creation:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        POTOS_FULL_DISK_ENCRYPTION_INITIAL_PASSWORD: ${POTOS_FULL_DISK_ENCRYPTION_INITIAL_PASSWORD}
+        POTOS_INITIAL_HOSTNAME: ${POTOS_INITIAL_HOSTNAME}
     volumes:
       - type: bind
         source: ./potos-images
         target: /potos-iso/potos-images
-    environment:
-      - "POTOS_ENV=production"
+    env_file: potos_env
