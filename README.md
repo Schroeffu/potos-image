@@ -12,10 +12,8 @@ Make sure you have [Docker](https://docs.docker.com/get-docker) and [Docker-Comp
 
 ```
 docker-compose build
-docker-compose up # this is going to take some minutes.
+docker-compose up # The container does stop after building the .iso image in /potos-images automatically.
 ```
-
-Your created .iso image will be placed in `/potos-images/`.
 
 Note: The time to generate the .iso image mainly depends on your internet bandwith, since an Ubuntu 22.04 image is downloaded and modified.
 
