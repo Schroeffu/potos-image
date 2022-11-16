@@ -1,22 +1,21 @@
 #!/bin/bash
 
 # Load all the environment variables
-source /setup/potos_env
 source /setup/.env
 
-POTOS_VERSION="Potos Linux Client"
+POTOS_VERSION="${POTOS_CLIENT_NAME} (${POTOS_CLIENT_SHORTNAME})"
 
 if [[ -f /setup/potos-version ]]; then
   POTOS_VERSION="$(</setup/potos-version)"
 fi
 
-yad --fullscreen --title 'Potos Setup' \
+yad --fullscreen --title '${POTOS_CLIENT_NAME} Setup' \
   --borders 20 --align center --button OK --image-on-top \
   --image=/potos-setup/potos.png \
   --text \
 "Welcome to the last step of the Potos installation
 
-Potos: ${POTOS_VERSION}
+Client: ${POTOS_VERSION}
 
 Environment Variables:
 POTOS_SPECS_REPOSITORY: ${POTOS_SPECS_REPOSITORY}
@@ -24,6 +23,8 @@ POTOS_ADJOIN: ${POTOS_ADJOIN}
 POTOS_ENV: ${POTOS_ENV}
 POTOS_FULL_DISK_ENCRYPTION_INITIAL_PASSWORD: ${POTOS_FULL_DISK_ENCRYPTION_INITIAL_PASSWORD}
 POTOS_INITIAL_HOSTNAME: ${POTOS_INITIAL_HOSTNAME}
+POTOS_CLIENT_NAME: ${POTOS_CLIENT_NAME}
+POTOS_CLIENT_SHORTNAME: ${POTOS_CLIENT_SHORTNAME}
 "
 
 #sudo systemctl restart gdm.service

@@ -3,6 +3,8 @@ FROM ubuntu:22.04
 # ARGs used during docker-compose build, from .env
 ARG POTOS_FULL_DISK_ENCRYPTION_INITIAL_PASSWORD
 ARG POTOS_INITIAL_HOSTNAME
+ARG POTOS_CLIENT_NAME
+ARG POTOS_CLIENT_SHORTNAME
 
 # ENVs used inside of the container at start docker-compose up, from potos_env file
 ENV POTOS_SPECS_REPOSITORY=$POTOS_SPECS_REPOSITORY
@@ -17,7 +19,6 @@ RUN apt update && apt install -y gfxboot p7zip-full xorriso wget curl libhtml-pa
 COPY potos-iso .
 
 # Copy all the ARGs and ENVs, to make them available the Potos ISO at boot.
-COPY potos_env contrib/scripts/potos_env
 COPY .env contrib/scripts/.env
 
 # Overwrite Potos Linux Client Name, according .env

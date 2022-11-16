@@ -4,6 +4,7 @@ DOWNLOAD_URL="${DOWNLOAD_URL:-https://releases.ubuntu.com/22.04}"
 ORIG_ISO="${ORIG_ISO:-ubuntu-22.04.1-live-server-amd64.iso}"
 INSTALL_TYPE="${INSTALL_TYPE:-desktop}"
 TMP_DIR=iso
+POTOS_CLIENT_NAME="${POTOS_CLIENT_NAME:-Potos Linux Client}"
 
 REQUIREMENTS="7z gfxboot xorriso wget curl sha256sum"
 
@@ -42,8 +43,8 @@ build_iso() {
   cp -r autoinstall/${INSTALL_TYPE}-bios "${TMP_DIR}/nocloud-bios"
   cp -r contrib "${TMP_DIR}/contrib"
 
-  printf "Potos Linux Client 22.04 (%s)\n" $(date +%Y%m%d-%H%M) > "${TMP_DIR}/contrib/potos-version"
-  echo "${ENVIRONMENT}" > "${TMP_DIR}/contrib/potos-environment"
+  printf "${POTOS_CLIENT_NAME} 22.04 (%s)\n" $(date +%Y%m%d-%H%M) > "${TMP_DIR}/contrib/${POTOS_CLIENT_SHORTNAME}-version"
+  echo "${ENVIRONMENT}" > "${TMP_DIR}/contrib/${POTOS_CLIENT_SHORTNAME}-environment"
 
   if [[ ! -d images ]]; then
     mkdir images
@@ -70,8 +71,8 @@ MBR_FILE=boot_hybrid.img
 dd if=${ORIG_ISO} bs=1 count=432 of=${MBR_FILE}
 dd if=${ORIG_ISO} bs=512 skip=2855516 count=8496 of=efi.img
 
-xorriso -as mkisofs -r -V 'Potos Linux Client 22.04' \
--o potos-installer-${ENVIRONMENT}.iso \
+xorriso -as mkisofs -r -V '${POTOS_CLIENT_NAME} 22.04' \
+-o ${POTOS_CLIENT_SHORTNAME}-installer-${ENVIRONMENT}.iso \
 --grub2-mbr ${MBR_FILE} \
 -partition_offset 16 \
 --mbr-force-bootable \
@@ -88,12 +89,13 @@ xorriso -as mkisofs -r -V 'Potos Linux Client 22.04' \
 
   rm -rf "${TMP_DIR}"
   rm -f "${MBR_FILE}"
-  cp potos*.iso* potos-images/.
+  cp ${POTOS_CLIENT_SHORTNAME}*.iso* potos-images/.
+
 }
 
 generate_checksum() {
-  if [[ -f potos-installer-${ENVIRONMENT}.iso ]]; then
-    sha256sum potos-installer-${ENVIRONMENT}.iso > potos-installer-${ENVIRONMENT}.iso.sha256sum
+  if [[ -f ${POTOS_CLIENT_SHORTNAME}-installer-${ENVIRONMENT}.iso ]]; then
+    sha256sum ${POTOS_CLIENT_SHORTNAME}-installer-${ENVIRONMENT}.iso > ${POTOS_CLIENT_SHORTNAME}-installer-${ENVIRONMENT}.iso.sha256sum
   fi
 }
 
@@ -129,7 +131,7 @@ main() {
 #    esac
 #   done
 
-  echo "*** DEBUG: Got POTOS_SPECS_REPOSITORY = ${POTOS_SPECS_REPOSITORY}, POTOS_ADJOIN = ${POTOS_ADJOIN}, POTOS_ENV = ${POTOS_ENV}, POTOS_CLIENT_NAME = ${POTOS_CLIENT_NAME}"
+  echo "*** INFO: Got POTOS_SPECS_REPOSITORY = ${POTOS_SPECS_REPOSITORY}, POTOS_ADJOIN = ${POTOS_ADJOIN}, POTOS_ENV = ${POTOS_ENV}, POTOS_CLIENT_NAME = ${POTOS_CLIENT_NAME}, POTOS_CLIENT_SHORTNAME = ${POTOS_CLIENT_SHORTNAME}"
   echo "*** Going build an ISO of type: ${INSTALL_TYPE} for ${ENVIRONMENT}"
 
   check_requirements
