@@ -20,6 +20,9 @@ COPY potos-iso .
 COPY potos_env contrib/scripts/potos_env
 COPY .env contrib/scripts/.env
 
+# Overwrite Potos Linux Client Name, according .env
+RUN sed -i "s/Install Potos Linux Client/Install $POTOS_CLIENT_NAME/g" "bootmenu/grub/grub.cfg"
+
 # Overwrite LUKS Install Key according .env
 RUN sed -i "s/key: .*/key: $POTOS_FULL_DISK_ENCRYPTION_INITIAL_PASSWORD/g" "autoinstall/desktop-bios/user-data"
 RUN sed -i "s/key: .*/key: $POTOS_FULL_DISK_ENCRYPTION_INITIAL_PASSWORD/g" "autoinstall/desktop-uefi/user-data"
