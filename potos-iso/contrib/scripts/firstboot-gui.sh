@@ -5,6 +5,8 @@ source /setup/.env
 
 POTOS_VERSION="${POTOS_CLIENT_NAME} (${POTOS_CLIENT_SHORTNAME})"
 
+/setup/change-keyboard-layout
+
 if [[ -f /setup/potos-version ]]; then
   POTOS_VERSION="$(</setup/potos-version)"
 fi
