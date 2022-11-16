@@ -1,3 +1,0 @@
-POTOS_SPECS_REPOSITORY=https://github.com/projectpotos/ansible-specs-potos.git
-POTOS_ADJOIN=false
-POTOS_ENV=production
