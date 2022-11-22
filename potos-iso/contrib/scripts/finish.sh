@@ -45,8 +45,8 @@ fi
 ################################################################################
 
 cd "${ANSIBLE_WORKDIR}"
-ansible-playbook prepare.yml -vvv
-ansible-playbook playbook.yml -vvv
+ansible-playbook prepare.yml -vvv | sed -u 's/^/# /'
+ansible-playbook playbook.yml -vvv | sed -u 's/^/# /'
 
 ################################################################################
 # Finalize the installation

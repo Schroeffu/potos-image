@@ -11,7 +11,7 @@ if [[ -f /setup/potos-version ]]; then
   POTOS_VERSION="$(</setup/potos-version)"
 fi
 
-yad --fullscreen --title '${POTOS_CLIENT_NAME} Setup' \
+yad --fullscreen --title "${POTOS_CLIENT_NAME} Setup" \
   --borders 20 --align center --button OK --image-on-top \
   --image=/potos-setup/potos.png \
   --text \
@@ -66,13 +66,13 @@ export POTOS_USER POTOS_PASS
 
 sudo mkdir -m 755 -p /var/log/${POTOS_CLIENT_SHORTNAME}
 sudo touch /var/log/${POTOS_CLIENT_SHORTNAME}/setup.log
-sudo -E bash -c '/setup/finish.sh &> /var/log/${POTOS_CLIENT_SHORTNAME}/setup.log' &
+sudo -E bash -c "/setup/finish.sh &> /var/log/${POTOS_CLIENT_SHORTNAME}/setup.log" &
 
 FINISH_CMD_PID=${!}
 
 sudo chown gnome-initial-setup /dev/tty2
 
-sudo tail -f /var/log/${POTOS_CLIENT_SHORTNAME}/setup.log | tee /dev/tty2 | yad --fullscreen --no-buttons --title '${POTOS_CLIENT_NAME} Setup' \
+sudo tail -f /var/log/${POTOS_CLIENT_SHORTNAME}/setup.log | tee /dev/tty2 | yad --fullscreen --no-buttons --title "${POTOS_CLIENT_NAME} Setup" \
   --progress --enable-log --log-expanded --log-on-top --log-height 500 \
   --text 'Please wait until the setup is finished' &
 
@@ -93,7 +93,7 @@ if [[ ${FINISH_CMD_RC} -ne 0 ]]; then
   esac
 fi
 
-sudo cat /var/log/${POTOS_CLIENT_SHORTNAME}/setup.log | yad --fullscreen --title '${POTOS_CLIENT_NAME} Setup' \
+sudo cat /var/log/${POTOS_CLIENT_SHORTNAME}/setup.log | yad --fullscreen --title "${POTOS_CLIENT_NAME} Setup" \
   --borders 20 --align center --button gtk-ok \
   --button "Shutdown":"sudo systemctl halt" \
   --text-info --tail \
