@@ -109,6 +109,8 @@ autoinstall:
         esac
       done
     - sed -ie 's|GRUB_CMDLINE_LINUX_DEFAULT=.*|GRUB_CMDLINE_LINUX_DEFAULT="quiet splash gnome.initial-setup=1 systemd.debug_shell"|' /target/etc/default/grub
+    - rm -f /target/etc/netplan/*
+    - cp /cdrom/contrib/netplan/01-network-manager-all.yaml /target/etc/netplan/01-network-manager-all.yaml
     - cp /cdrom/contrib/sudoers.d/01_gnome-initial-setup /target/etc/sudoers.d/01_gnome-initial-setup
     - cp -r /cdrom/contrib/scripts /target/setup
     - curtin in-target --target=/target -- ln -sf /setup/firstboot-gui.sh /usr/libexec/gnome-initial-setup
