@@ -55,7 +55,7 @@ Please enter your new credentials below
   POTOS_PASS="$(echo ${USERINPUT} | cut -d '|' -f 2)"
 
   if [[ -z ${POTOS_USER} || -z ${POTOS_PASS} ]]; then
-    yad --title '${POTOS_CLIENT_NAME} Setup' \
+    yad --title "${POTOS_CLIENT_NAME} Setup" \
       --borders 20 --align center --button gtk-ok --image-on-top \
       --image=/potos-setup/potos.png \
       --text 'Please choose and enter your new credentials.'
