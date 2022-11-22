@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 
 # ARGs used during docker-compose build, from .env
-ARG POTOS_FULL_DISK_ENCRYPTION_INITIAL_PASSWORD
+ARG POTOS_DISK_ENCRYPTION_INITIAL_PASSWORD
 ARG POTOS_INITIAL_HOSTNAME
 ARG POTOS_CLIENT_NAME
 ARG POTOS_CLIENT_SHORTNAME
@@ -10,6 +10,9 @@ ARG POTOS_CLIENT_SHORTNAME
 ENV POTOS_SPECS_REPOSITORY=$POTOS_SPECS_REPOSITORY
 ENV POTOS_ADJOIN=$POTOS_ADJOIN
 ENV POTOS_ENV=$POTOS_ENV
+ENV POTOS_GIT_SPECS_URL=$POTOS_GIT_SPECS_URL
+ENV POTOS_GIT_SPECS_REPO=$POTOS_GIT_SPECS_REPO
+ENV POTOS_GIT_SPECS_BRANCH=$POTOS_GIT_SPECS_BRANCH
 
 WORKDIR /potos-iso
 
@@ -25,8 +28,8 @@ COPY .env contrib/scripts/.env
 RUN sed -i "s/Install Potos Linux Client/Install $POTOS_CLIENT_NAME/g" "bootmenu/grub/grub.cfg"
 
 # Overwrite LUKS Install Key according .env
-RUN sed -i "s/key: .*/key: $POTOS_FULL_DISK_ENCRYPTION_INITIAL_PASSWORD/g" "autoinstall/desktop-bios/user-data"
-RUN sed -i "s/key: .*/key: $POTOS_FULL_DISK_ENCRYPTION_INITIAL_PASSWORD/g" "autoinstall/desktop-uefi/user-data"
+RUN sed -i "s/key: .*/key: $POTOS_DISK_ENCRYPTION_INITIAL_PASSWORD/g" "autoinstall/desktop-bios/user-data"
+RUN sed -i "s/key: .*/key: $POTOS_DISK_ENCRYPTION_INITIAL_PASSWORD/g" "autoinstall/desktop-uefi/user-data"
 
 # Overwrite Initial Hostname, according .env
 RUN sed -i "s/hostname: .*/hostname: $POTOS_INITIAL_HOSTNAME/g" "autoinstall/desktop-bios/user-data"

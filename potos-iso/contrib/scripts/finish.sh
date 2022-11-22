@@ -1,31 +1,30 @@
 #!/bin/bash
 
-################################################################################
+# Load all the environment variables
+source /setup/.env
+
+#just for debug , schroeffu
+mkdir /opt/tmp
+cp -R /setup/* /opt/tmp
+cp /setup/.env /opt/tmp
 
 ANSIBLE_WORKDIR='/var/lib/ansible/local/work'
 ANSIBLE_GIT_URL='https://github.com/projectpotos/ansible-plays-potos.git'
-ANSIBLE_GIT_BRANCH='develop'
+ANSIBLE_GIT_BRANCH='main'
 
-DOMAIN_JOIN_DOMAIN='REMOVED'
-DOMAIN_JOIN_OU='OU=NA,DC=DOMAIN,DC=LOCAL'
-DOMAIN_JOIN_USER='na@ad.domain.local'
-
-export DOMAIN_JOIN_DOMAIN DOMAIN_JOIN_OU DOMAIN_JOIN_USER
-
-################################################################################
-
-mkdir -m 755 -p /var/log/potos
-
-################################################################################
-# Prepare the git checkout
-################################################################################
-
-if [[ ! -d /root/.ssh ]]; then
-  mkdir -m 700 /root/.ssh
+if [[ -d "/etc/potos" ]]; then
+  rm -rf "/etc/potos"
 fi
 
-cat > /etc/ansible/potos_inventory <<EOF
-localhost ansible_connection=local
+mkdir -p "/etc/potos"
+mkdir -p "/var/log/potos"
+
+cat > /etc/potos/specs_repo.yml <<EOF
+---
+client_name: "${POTOS_CLIENT_NAME}"
+git_url: "${POTOS_GIT_SPECS_URL}"
+git_repo: "${POTOS_GIT_SPECS_REPO}"
+git_branch: "${POTOS_GIT_SPECS_BRANCH}"
 EOF
 
 if [[ -d "${ANSIBLE_WORKDIR}" ]]; then
@@ -42,35 +41,12 @@ if [[ $? -ne 0 ]]; then
 fi
 
 ################################################################################
-# Fetch the hostname and prepare the ansible vars
-################################################################################
-
-#KEYBOARD_LAYOUT="ch"
-
-#if [[ -f /tmp/keyboard-layout.selected ]]; then
-#  KEYBOARD_LAYOUT="$(< /tmp/keyboard-layout.selected)"
-#fi
-
-cat > /tmp/potos-setup_ansible-vars.yml <<EOF
-client_fqdn: "${POTOS_HOSTNAME}.ad.domain.local"
-keyboard_layout: "${KEYBOARD_LAYOUT}"
-#domain_join_domain: "${DOMAIN_JOIN_DOMAIN}"
-#domain_join_ou: "${DOMAIN_JOIN_OU}"
-#domain_join_user: "${DOMAIN_JOIN_USER}"
-#domain_join_pass: "${DOMAIN_JOIN_PASS}"
-EOF
-
-################################################################################
-# Apply the ansible playbook
+# Apply the ansible prepare.yml
 ################################################################################
 
 cd "${ANSIBLE_WORKDIR}"
-ansible-playbook -e "@/tmp/potos-setup_ansible-vars.yml" setup.yml | sed -u 's/^/# /'
-
-if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
-  echo "# ERROR: Ansible failed with return code ${PIPESTATUS[0]}"
-  exit 1
-fi
+ansible-playbook prepare.yml -vvv | sed -u 's/^/# /'
+ansible-playbook playbook.yml -vvv | sed -u 's/^/# /'
 
 ################################################################################
 # Finalize the installation
@@ -94,5 +70,3 @@ rm -rf /setup
 
 sleep 5s
 systemctl reboot
-
-# vim: tabstop=2 shiftwidth=2 expandtab softtabstop=2

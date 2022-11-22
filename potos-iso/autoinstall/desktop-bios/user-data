@@ -96,7 +96,7 @@ autoinstall:
     - ubuntu-desktop
     - plymouth-theme-ubuntu-logo
     - ldap-utils
-    - ansible-core
+    - ansible
     - yad
     - jq
   late-commands:
@@ -113,7 +113,5 @@ autoinstall:
     - cp -r /cdrom/contrib/scripts /target/setup
     - curtin in-target --target=/target -- ln -sf /setup/firstboot-gui.sh /usr/libexec/gnome-initial-setup
     - curtin in-target --target=/target -- update-grub
-    - mkdir /target/potos
-    - touch /target/potos/example.empty
 
 # vim: filetype=yaml
